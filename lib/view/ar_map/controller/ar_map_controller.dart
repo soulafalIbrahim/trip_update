@@ -10,8 +10,10 @@ class ArMapController extends GetxController {
   var capturedImage = Rx<File?>(null);
   RxInt selectedPage = 0.obs;
   List<Map<String, dynamic>> buttons = [
+    {"icon": BoxIcons. bx_qr_scan , "label": "Scanner"},
     {"icon": Icons.fingerprint, "label": "Fingerprint"},
     {"icon": BoxIcons.bx_gift, "label": "Gift"},
+   
 
   ];
   @override
@@ -41,6 +43,7 @@ class ArMapController extends GetxController {
 
     final XFile picture = await cameraController.takePicture();
     capturedImage.value = File(picture.path);
+    print('photo  Token${capturedImage.value}');
   }
 
   @override

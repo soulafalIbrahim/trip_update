@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:trip/core/constant/assets.dart';
-import '../../../core/constant/routes.dart';
 import '../../../widget/custom_elevated_button.dart';
 import '../../../widget/custom_text.dart';
 import '../../../widget/custom_text_form_filed.dart';
@@ -22,7 +21,7 @@ class ForgotPasswordScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: AppColor.dark,
         title: CustomText(
-          text: 'Reset Password',
+          text: 'Reset Password'.tr,
           fontSize: 25,
           color: AppColor.lightGrey,
         ),
@@ -45,25 +44,25 @@ class ForgotPasswordScreen extends StatelessWidget {
               Image.asset(Assets.iconLock),
               const SizedBox(height: 20),
               CustomText(
-                text: 'Enter your email',
+                text: 'Enter your email'.tr,
                 fontSize: 18,
                 color: AppColor.lightGrey,
               ),
               const SizedBox(height: 20),
               CustomTextForm(
                 myController: _emailController,
-                hintText: 'Email',
+                hintText: 'Email'.tr,
                 iconPrefixData: Icons.email,
                 valid: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Pleas enter your email';
+                    return 'Pleas enter your email'.tr;
                   }
                   return null;
                 },
               ),
               const SizedBox(height: 20),
               CustomElevatedButton(
-                text: 'Send Email',
+                text: 'Send Email'.tr,
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     _authController.sendPasswordResetEmail(

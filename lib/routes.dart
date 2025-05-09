@@ -2,7 +2,7 @@ import 'package:trip/view/ar_map/screen/ar_take_photo_screen.dart';
 import 'package:trip/view/auth/screen/forgot_password_screen.dart';
 import 'package:trip/view/auth/screen/login_screen.dart';
 import 'package:get/get.dart';
-import 'package:trip/view/account/screen/settings_screen.dart';
+import 'package:trip/view/account/setting_profile/screen/settings_screen.dart';
 import 'package:trip/view/auth/screen/sign_up_screen.dart';
 import 'package:trip/view/balance/screen/balance_screen.dart';
 import 'package:trip/view/gift_comments/screen/gift_comments.dart';

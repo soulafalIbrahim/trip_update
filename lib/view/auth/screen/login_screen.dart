@@ -31,7 +31,7 @@ class LoginScreen extends StatelessWidget {
                       const SizedBox(height: 50),
                       Center(
                         child: CustomText(
-                          text: 'Welcome to The Special World',
+                          text: 'Welcome to The Special World'.tr,
                           fontWeight: FontWeight.bold,
                           fontSize: 22,
                           color: AppColor.white,
@@ -51,15 +51,15 @@ class LoginScreen extends StatelessWidget {
                       CustomTextForm(
                         myController: controller.emailController,
                         iconPrefixData: Icons.email,
-                        hintText: "Email Address",
+                        hintText: "Email Address".tr,
                         keyboardType: TextInputType.emailAddress,
                         valid: (value) {
                           if (value!.isEmpty) {
-                            return 'Please enter your email address';
+                            return 'Please enter your email address'.tr;
                           } else if (!RegExp(
                               r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$')
                               .hasMatch(value)) {
-                            return 'Please enter a valid email address';
+                            return 'Please enter a valid email address'.tr;
                           }
                           return null;
                         },
@@ -71,10 +71,10 @@ class LoginScreen extends StatelessWidget {
                       CustomTextForm(
                         myController: controller.passwordController,
                         iconPrefixData: Icons.lock,
-                        hintText: "Password",
+                        hintText: "Password".tr,
                         valid: (value) {
                           if (value!.isEmpty) {
-                            return 'Please enter your password';
+                            return 'Please enter your password'.tr;
                           }
                           return null;
                         },
@@ -142,7 +142,7 @@ class LoginScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           CustomText(
-                            text: 'Don\'t have an account? ',
+                            text: 'Don\'t have an account? '.tr,
                             fontSize: 16,
                             color: AppColor.lightGrey,
                           ),
@@ -152,7 +152,7 @@ class LoginScreen extends StatelessWidget {
                               Get.toNamed(AppRoutes.registerScreen);
                             },
                             child: CustomText(
-                              text: 'Signup here!',
+                              text: 'Signup here!'.tr,
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
                               color: AppColor.lightGrey,
@@ -166,9 +166,9 @@ class LoginScreen extends StatelessWidget {
                         onPressed: () {
                           Get.toNamed(AppRoutes.forgotPasswordScreen);
                         },
-                        child: const Text(
-                          'Forgot your password?',
-                          style: TextStyle(
+                        child:  Text(
+                          'Forgot your password?'.tr,
+                          style:const TextStyle(
                             color: Colors.white,
                             fontSize: 16,
                             decoration: TextDecoration.underline,

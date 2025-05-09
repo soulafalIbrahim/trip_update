@@ -1,0 +1,3 @@
+-keep class io.flutter.plugins.googlemaps.** { *; }
+-keepclassmembers class io.flutter.plugins.googlemaps.** { *; }
+-keep interface io.flutter.plugins.googlemaps.** { *; }

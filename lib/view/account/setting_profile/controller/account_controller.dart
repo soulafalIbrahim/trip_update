@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../data/helpers/my_dialogs.dart';
-import '../../auth/screen/login_screen.dart';
+import '../../../../data/helpers/my_dialogs.dart';
+import '../../../auth/screen/login_screen.dart';
 
 class AccountController extends GetxController {
   var userName = ''.obs;
@@ -11,13 +14,22 @@ class AccountController extends GetxController {
   var phone = ''.obs;
   var country = ''.obs;
   var idNumber = ''.obs;
+  var userBalance = 0.obs;
+ 
+  var fingerPoint = 0.obs;
+  var profileImage  ; 
 
+  
+ 
   @override
   void onInit() {
     super.onInit();
     fetchUserData(); // call on startup
+   
   }
-
+  
+   
+  
   void fetchUserData() async {
     try {
       final currentUser = FirebaseAuth.instance.currentUser;
@@ -37,7 +49,15 @@ class AccountController extends GetxController {
           phone.value = data['phone'] ?? '';
           country.value = data['country'] ?? '';
           idNumber.value = data['id'] ?? '';
+          profileImage  = data['profileImage']?? '';
+          fingerPoint.value = data['fingerPoint'] ?? 0;
+          userBalance.value = data['balance'] ?? 0;
+            
+          print('//////////////////////${data['balance']}');
+
         }
+
+       
       } else {
         throw ("User is not logged in.");
       }
@@ -68,4 +88,12 @@ class AccountController extends GetxController {
     }
   }
 
+
+
+  
+
+
+
 }
+
+

@@ -5,6 +5,7 @@ import 'package:trip/core/constant/const_data.dart';
 
 import '../../../core/constant/routes.dart';
 import '../../../widget/circle_button_widget.dart';
+import '../gift_controller/gift_controller.dart';
 
 
 class GiftsMapScreen extends StatefulWidget {
@@ -17,37 +18,44 @@ class GiftsMapScreen extends StatefulWidget {
 class _GiftsMapScreenState extends State<GiftsMapScreen> with SingleTickerProviderStateMixin {
   late GoogleMapController mapController;
   final LatLng _center = const LatLng(24.7136, 46.6753);
+ // final GiftController giftController = Get.put(GiftController());
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          /// Google Map with dark mode style
-          GoogleMap(
-            onMapCreated: (controller) {
-              mapController = controller;
-              mapController.setMapStyle(ConstData.darkMapStyle);
-            },
-            initialCameraPosition: CameraPosition(
-              target: _center,
-              zoom: 15.0,
-            ),
-            mapType: MapType.normal,
-            zoomControlsEnabled: false,
-            myLocationEnabled: true,
-            myLocationButtonEnabled: false,
-          ),
-          Positioned(
-            right: 16,
-            bottom: 10,
-            child: GestureDetector(
-              onTap: () {
-           Get.toNamed(AppRoutes.giftsShoppingListScreen);
+    return GetBuilder(
+      init:GiftController() ,
+      builder: (giftController) => 
+      Scaffold(
+        body: Stack(
+          children: [
+            /// Google Map with dark mode style
+            GoogleMap(
+              onMapCreated: (controller) {
+                mapController = controller;
+                mapController.setMapStyle(ConstData.darkMapStyle);
               },
-              child: const CircleButtonWidget(icon:Icons.add,height: 60,width: 60),
+              initialCameraPosition: CameraPosition(
+                target:_center,
+                //giftController.currentLocationt!,
+                zoom: 15.0,
+              ),
+              markers:giftController.markers,
+              mapType: MapType.normal,
+              zoomControlsEnabled: false,
+              myLocationEnabled: true,
+              myLocationButtonEnabled: false,
             ),
-          ),
-        ],
+            Positioned(
+              right: 16,
+              bottom: 10,
+              child: GestureDetector(
+                onTap: () {
+             Get.toNamed(AppRoutes.giftsShoppingListScreen);
+                },
+                child: const CircleButtonWidget(icon:Icons.add,height: 60,width: 60),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

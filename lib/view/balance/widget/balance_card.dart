@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../../core/constant/color.dart';
+import '../../account/setting_profile/controller/account_controller.dart';
 
 class BalanceCard extends StatelessWidget {
   const BalanceCard({super.key});
 
   @override
   Widget build(BuildContext context) {
+    AccountController accountController = Get.put(AccountController());
     return Container(
       height: 130,
       margin: const EdgeInsets.all(16),
@@ -31,7 +34,7 @@ class BalanceCard extends StatelessWidget {
                     Icon(Icons.arrow_back_ios, size: 10, color: AppColor.white),
                     const SizedBox(width: 4),
                     Text(
-                      "الحصول على عملات",
+                      "Get coins".tr,
                       style: TextStyle(color: AppColor.white, fontSize: 10),
                     ),
                   ],
@@ -41,13 +44,15 @@ class BalanceCard extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      "البصمات",
+                      "Fingerprints".tr,
                       style: TextStyle(color: AppColor.white, fontSize: 12),
                     ),
                     const SizedBox(width: 8),
-                    Text(
-                      "0",
-                      style: TextStyle(color: AppColor.white, fontSize: 12),
+                    Obx(()=>
+                       Text(
+                        "${accountController.fingerPoint.value}",
+                        style: TextStyle(color: AppColor.white, fontSize: 12),
+                      ),
                     ),
                     const SizedBox(width: 4),
                     const Icon(Icons.fingerprint, size: 14, color: AppColor.appColor),
@@ -78,7 +83,7 @@ class BalanceCard extends StatelessWidget {
                  Expanded(
                   child: Center(
                     child: Text(
-                      "غير ذلك",
+                      "Other than that".tr,
                       style: TextStyle(color: AppColor.white, fontSize: 12),
                     ),
                   ),
@@ -98,13 +103,16 @@ class BalanceCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "مكافآت LIVE",
+                          "Rewards LIVE".tr,
                           style: TextStyle(color: AppColor.white, fontSize: 12),
                         ),
                         const SizedBox(height: 4),
-                        Text(
-                          "0.00 ر.س.",
-                          style: TextStyle(color: AppColor.white, fontSize: 13),
+                        Obx(
+                          ()=> 
+                         Text(
+                            "${accountController.userBalance.value} ر.س.",
+                            style: TextStyle(color: AppColor.white, fontSize: 13),
+                          ),
                         ),
                       ],
                     ),

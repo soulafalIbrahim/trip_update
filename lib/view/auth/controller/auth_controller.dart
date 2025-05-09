@@ -74,6 +74,8 @@ class AuthController extends GetxController {
         'createdAt': FieldValue.serverTimestamp(),
         'remainingDays': 30,
         'isEmailVerified': false,
+        'fingerPoint':0,
+        'balance':0,
       });
 
       // Send email verification link
@@ -86,8 +88,9 @@ class AuthController extends GetxController {
       isLoading = false;
       update();
     } on FirebaseAuthException catch (e) {
-      isLoading = false;
+      isLoading = false ;
       update();
+      
       MyDialogs.error(msg: 'Registration failed: ${e.message}');
     }
   }

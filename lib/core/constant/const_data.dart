@@ -1,4 +1,4 @@
-import '../../view/account/screen/profile_screen.dart';
+import '../../view/account/setting_profile/screen/profile_screen.dart';
 import '../../view/gifts/screen/gifts_screen.dart';
 import '../../view/home/screen/home_screen.dart';
 
@@ -120,9 +120,12 @@ class ConstData {
   }
 ]
 ''';
-   static final screens = [
+  static final screens = [
     const ARMapScreen(),
     const GiftsMapScreen(),
     const ProfileScreen(),
   ];
+
+   static String fingerprintDocId = " ";
+   String  mapHomeDocId = " ";
 }

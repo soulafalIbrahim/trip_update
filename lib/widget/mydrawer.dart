@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:trip/core/constant/assets.dart';
 import 'package:trip/core/constant/color.dart';
-import 'package:trip/view/account/screen/settings_screen.dart';
+import 'package:trip/view/account/setting_profile/screen/settings_screen.dart';
 import 'package:trip/widget/drawr_item.dart';
 
 import '../view/home/screen/home_screen.dart';

@@ -10,7 +10,10 @@ import 'package:trip/core/constant/color.dart';
 import 'package:trip/core/constant/routes.dart';
 import 'package:trip/data/helpers/pref.dart';
 import 'package:trip/routes.dart';
+import 'core/localization/my_local.dart';
+import 'core/services/services.dart';
 import 'firebase_options.dart';
+import 'view/account/change_language/change_langauge_controller/change_langauge_controller.dart';
 
 void main() async {
   try {
@@ -67,7 +70,7 @@ void main() async {
       debugPrint('Stack trace: $stack');
       return true;
     };
-
+     asyncingData();
     runApp(const MyApp());
   } catch (e, stack) {
     debugPrint('Startup error: $e');
@@ -114,12 +117,15 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
+    final ChangeLangaugeController controller = Get.put(ChangeLangaugeController());
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Trip',
       initialRoute: AppRoutes.splashScreen,
       getPages: routes,
       initialBinding: InitialBindings(),
+      locale:controller.initial,
+      translations: MyLocal(),
       home: Scaffold(
         backgroundColor: AppColor.dark,
         body: const Center(

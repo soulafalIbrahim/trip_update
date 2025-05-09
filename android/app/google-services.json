@@ -7,12 +7,20 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:649161144772:android:118c5184f1967ae2888c91",
+        "mobilesdk_app_id": "1:649161144772:android:b95cb690b303e2fc888c91",
         "android_client_info": {
-          "package_name": "com.hasanahmad.trip"
+          "package_name": "com.hasanhasan.ahmadalgnanim.tagzone"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "649161144772-6pvac493ult8io2slou6133imh2b85kk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hasanhasan.ahmadalgnanim.tagzone",
+            "certificate_hash": "4c8de92f66a4f26837c41cb0da3bb07ca4122428"
+          }
+        },
         {
           "client_id": "649161144772-180p8vo7f19ln30p8nftafurmbooft2d.apps.googleusercontent.com",
           "client_type": 3
@@ -20,7 +28,7 @@
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAX-txkvWvANKmqb-Kic69M_MA5nrLlOCI"
+          "current_key": "AIzaSyBu5jQZiQC0MdIt-lqvcGyolqJO7fc9mJY"
         }
       ],
       "services": {
@@ -31,10 +39,10 @@
               "client_type": 3
             },
             {
-              "client_id": "649161144772-69079nlqtu4i4js2ttuks5a44j006lvf.apps.googleusercontent.com",
+              "client_id": "649161144772-6knsgf7feau9rhlvqp4n5pb6nk0n6bk1.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.relic"
+                "bundle_id": "com.example.trip"
               }
             }
           ]

@@ -1,8 +1,16 @@
+import 'dart:math';
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
+import '../../../core/constant/assets.dart';
 import '../../../core/constant/color.dart';
 import '../../../widget/custom_button_navbar_widget.dart';
+import '../../gifts/gift_controller/gift_controller.dart';
+import '../../gifts/screen/gifts_screen.dart';
+import '../../leave_a_trace/screen/leave_a_trace_screen.dart';
+import '../../scanner/scanner_screen/scanner_screen.dart';
 import '../controller/ar_map_controller.dart';
 
 // class ArTakePhotoScreen extends StatelessWidget {
@@ -153,6 +161,7 @@ class ArTakePhotoScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(ArMapController());
+   // final giftController = Get.put(GiftController());
 
     return Scaffold(
       backgroundColor: AppColor.dark,
@@ -189,14 +198,20 @@ class ArTakePhotoScreen extends StatelessWidget {
               right: 0,
               child: Obx(() {
                 if (controller.selectedPage.value == 0) {
-                  return const Center(
-                    child: Text("Fingerprint Mode", style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
+                  return  Center(
+                    child: Text("Scanner Mode".tr, style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
                   );
                 } else if (controller.selectedPage.value == 1) {
-                  return const Center(
-                    child: Text("Gift Mode", style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
+                  return  Center(//Gift Mode
+                    child: Text("Fingerprint Mode".tr, style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
                   );
-                } else {
+                } else if (controller.selectedPage.value == 2) {
+                  return  Center(
+                    child: Text("Gift Mode".tr, style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
+                  );
+                } 
+                
+                else {
                   return const SizedBox();
                 }
               }),
@@ -215,7 +230,21 @@ class ArTakePhotoScreen extends StatelessWidget {
                 children: List.generate(controller.buttons.length, (index) {
                   final button = controller.buttons[index];
                   return GestureDetector(
-                    onTap: () => controller.takePicture(),
+                    onTap: () {
+                      //edit action for button
+                      if( controller.selectedPage.value == 0){
+                           Get.to(ScannerScreen());
+                      }else if(controller.selectedPage.value == 1){
+                            controller.takePicture();
+                          Get.to(LeaveTraceScreen());
+                      }
+                      else if(controller.selectedPage.value == 2){
+                       
+                      
+                        Get.to(GiftsMapScreen());
+                      }
+                      
+                    },
                     child: Obx(() => Container(
                       margin: const EdgeInsets.symmetric(horizontal: 8),
                       decoration: BoxDecoration(

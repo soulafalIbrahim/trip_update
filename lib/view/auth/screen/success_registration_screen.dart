@@ -20,13 +20,13 @@ class SuccessRegistrationScreen extends StatelessWidget {
           Image.asset(Assets.registerSuccessful),
             const SizedBox(height: 20),
             CustomText(
-              text: 'Verified',
+              text: 'Verified'.tr,
               fontSize: 24,
               color: AppColor.lightGrey,
             ),
             const SizedBox(height: 20,),
             CustomText(
-              text: 'your account has been\n verified successfully',
+              text: 'your account has been\n verified successfully'.tr,
               fontSize: 15,
               color: AppColor.lightGrey,
             ),
@@ -35,7 +35,7 @@ class SuccessRegistrationScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 60.0),
               child: CustomElevatedButton(
 
-                text: 'Done',
+                text: 'Done'.tr,
                 buttonColor: AppColor.appColor,
                 onPressed: () {
                   Get.offAll(() =>  const ArTakePhotoScreen());

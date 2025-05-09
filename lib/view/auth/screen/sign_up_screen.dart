@@ -18,7 +18,7 @@ class RegisterScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: AppColor.dark,
         title: CustomText(
-          text: 'Sign up',
+          text: 'Sign up'.tr,
           fontSize: 25,
           color: AppColor.lightGrey,
         ),
@@ -55,23 +55,23 @@ class RegisterScreen extends StatelessWidget {
                   const SizedBox(height: 15),
                   CustomTextForm(
                     myController: controller.usernameController,
-                    hintText: "Enter your name",
+                    hintText: "Enter your name".tr,
                     iconPrefixData: Icons.person,
-                    valid: (val) => val == null || val.isEmpty ? 'Enter your name' : null,
+                    valid: (val) => val == null || val.isEmpty ? 'Enter your name'.tr : null,
                   ),
                   const SizedBox(height: 10),
                   CustomTextForm(
                     myController: controller.emailController,
-                    hintText: "Enter your email",
+                    hintText: "Enter your email".tr,
                     iconPrefixData: Icons.email,
                     keyboardType: TextInputType.emailAddress,
                     valid: (val) =>
-                    !GetUtils.isEmail(val!) ? 'Enter a valid email' : null,
+                    !GetUtils.isEmail(val!) ? 'Enter a valid email'.tr : null,
                   ),
                   const SizedBox(height: 10),
                   CustomTextForm(
                     myController: controller.birthdateController,
-                    hintText: "Date of Birth",
+                    hintText: "Date of Birth".tr,
                     iconPrefixData: Icons.calendar_today,
                     readOnly: true,
                     onTap: () async {
@@ -87,28 +87,28 @@ class RegisterScreen extends StatelessWidget {
                       }
                     },
                     valid: (val) =>
-                    val == null || val.isEmpty ? 'Enter birthdate' : null,
+                    val == null || val.isEmpty ? 'Enter birthdate'.tr : null,
                   ),
                   const SizedBox(height: 10),
                   CustomTextForm(
                     myController: controller.passwordController,
-                    hintText: "Password",
+                    hintText: "Password".tr,
                     obscureText: true,
                     iconPrefixData: Icons.lock,
                     valid: (val) => val != null && val.length >= 6
                         ? null
-                        : 'Password must be at least 6 characters',
+                        : 'Password must be at least 6 characters'.tr,
                   ),
                   const SizedBox(height: 10),
                   CustomTextForm(
                     myController: controller.confirmPasswordController,
-                    hintText: "Confirm Password",
+                    hintText: "Confirm Password".tr,
                     obscureText: true,
                     iconPrefixData: Icons.lock,
                     valid: (val) =>
                     val == controller.passwordController.text
                         ? null
-                        : 'Passwords do not match',
+                        : 'Passwords do not match'.tr,
                   ),
                   const SizedBox(height: 10),
                   Row(
@@ -121,11 +121,11 @@ class RegisterScreen extends StatelessWidget {
                           isExpanded: true,
                           dropdownColor: Colors.black,
                           style: const TextStyle(color: Colors.white),
-                          items: const [
+                          items:  [
                             DropdownMenuItem(
-                                value: 'Male', child: Text("Male" , style: TextStyle(color: Colors.white , fontSize: 16),)),
+                                value: 'Male', child: Text("Male".tr , style:const TextStyle(color: Colors.white , fontSize: 16),)),
                             DropdownMenuItem(
-                                value: 'Female', child: Text("Female" , style: TextStyle(color: Colors.white , fontSize: 16),)),
+                                value: 'Female', child: Text("Female".tr , style:const TextStyle(color: Colors.white , fontSize: 16),)),
                           ],
                           onChanged: (value) {
                             if (value != null) {
@@ -138,7 +138,7 @@ class RegisterScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 20),
                   CustomElevatedButton(
-                    text: 'Register',
+                    text: 'Register'.tr,
                     buttonColor: AppColor.appColor,
                     onPressed: () {
                       if (formKey.currentState!.validate()) {

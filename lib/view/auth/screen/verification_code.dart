@@ -15,7 +15,7 @@ class EmailVerificationScreen extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: AppColor.dark,
           title: CustomText(
-            text: 'Verification Code',
+            text: 'Verification Code'.tr,
             fontSize: 25,
             color: AppColor.lightGrey,
           ),
@@ -36,7 +36,7 @@ class EmailVerificationScreen extends StatelessWidget {
                   child: Center(
                     child: CustomText(
                       text:
-                          'Please check your email for the verification link and click on it.',
+                          'Please check your email for the verification link and click on it.'.tr,
                       fontSize: 18,
                       color: AppColor.lightGrey,
                     ),
@@ -44,7 +44,7 @@ class EmailVerificationScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 40),
                 CustomElevatedButton(
-                  text: 'Confirmed My Email',
+                  text: 'Confirmed My Email'.tr,
                   buttonColor: AppColor.appColor,
                   onPressed: controller.checkVerification,
                 ),
