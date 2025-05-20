@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:ui';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
@@ -31,10 +30,8 @@ void main() async {
       );
     } catch (e) {
       debugPrint('Firebase initialization error: $e');
-      // Continue without Firebase if it fails
+   
     }
-
-    // Initialize Hive with error handling
     try {
       await Pref.initializeHive().timeout(
         const Duration(seconds: 5),
@@ -76,7 +73,6 @@ void main() async {
     debugPrint('Startup error: $e');
     debugPrint('Stack trace: $stack');
 
-    // Show error UI instead of crashing
     runApp(MaterialApp(
       home: Scaffold(
         body: Center(
@@ -100,7 +96,7 @@ void main() async {
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
-                    main(); // Retry initialization
+                    main(); 
                   },
                   child: const Text('Retry'),
                 ),

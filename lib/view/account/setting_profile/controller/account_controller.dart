@@ -1,8 +1,7 @@
-import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 import '../../../../data/helpers/my_dialogs.dart';
@@ -33,10 +32,8 @@ class AccountController extends GetxController {
   void fetchUserData() async {
     try {
       final currentUser = FirebaseAuth.instance.currentUser;
-
       if (currentUser != null) {
         String userId = currentUser.uid;
-
         DocumentSnapshot doc = await FirebaseFirestore.instance
             .collection('users')
             .doc(userId)
@@ -52,8 +49,6 @@ class AccountController extends GetxController {
           profileImage  = data['profileImage']?? '';
           fingerPoint.value = data['fingerPoint'] ?? 0;
           userBalance.value = data['balance'] ?? 0;
-            
-          print('//////////////////////${data['balance']}');
 
         }
 
@@ -62,7 +57,7 @@ class AccountController extends GetxController {
         throw ("User is not logged in.");
       }
     } catch (e) {
-      throw("Error fetching user data: $e");
+    debugPrint('$e') ;
     }
   }
   Future<void> deleteAccount() async {

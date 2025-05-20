@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:trip/core/constant/routes.dart';
 import '../../../../core/constant/color.dart';
 import '../../../gift_shopping_list/screen/gift_shopping_list_screen.dart';
+import '../../myfingerprints/my_fingerprint.dart';
 import '../../widgets/profile_header.dart';
 import '../../widgets/profile_menu_item.dart';
 import '../../change_language/change_langauge_screen/change_langauge.dart';
 import '../../leader_board/leader_board_screen/leader_board_screen.dart';
-import '../controller/account_controller.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-   final AccountController accountController = Get.put(AccountController());
     return Scaffold(
       backgroundColor:AppColor.dark,
       body: SafeArea(
@@ -34,7 +32,7 @@ class ProfileScreen extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
-                 AppHeader(title: 'Profile Screen'.tr,optionsSettings:true),
+                 AppHeader(title: 'Profile Screen'.tr,optionsSettings:true,),
                 const SizedBox(height: 20),
                 const  Text(
                   "Setting DATA",
@@ -47,14 +45,17 @@ class ProfileScreen extends StatelessWidget {
                 const SizedBox(height: 10),
         
                 InkWell(
-                  onTap:(){Get.to(LeaderBoardScreen());},
+                  onTap:(){Get.to(const LeaderBoardScreen());},
                   child: ProfileMenuItem(icon: Icons.leaderboard, title: "LEADERBOARD".tr)),
               
                 InkWell(
-                  onTap:()  => Get.to(GiftsShoppingListScreen()),
+                  onTap:()  => Get.to(const GiftsShoppingListScreen()),
                   child:ProfileMenuItem(icon: Icons.card_giftcard, title: "GIFT ITEMS".tr)),
                  InkWell(
-                  onTap:()=> Get.to(ChangeLangaugeScreen()),
+                  onTap:()=>Get.to(() => const MyFingerprint()),
+                  child: ProfileMenuItem(icon: Icons.fingerprint, title: "My FingerPrint".tr)),
+                InkWell(
+                  onTap:()=> Get.to(const ChangeLangaugeScreen()),
                   child: ProfileMenuItem(icon: Icons.language, title: "Chage Language".tr)),
                  ProfileMenuItem(icon: Icons.warning, title: "Term Of Use".tr),
                 const Spacer(),

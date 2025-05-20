@@ -1,0 +1,1 @@
+H:\Flutter Projects\trip\build\app\intermediates\cxx\RelWithDebInfo\e3r5l4h5\obj\arm64-v8a

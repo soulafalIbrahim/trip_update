@@ -6,7 +6,7 @@ class LeaderBoardController  extends GetxController{
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
    CollectionReference users = FirebaseFirestore.instance.collection('users');
    bool isloading = false ;
-   List allUaser = [];
+   List allUaser = [ ];
 
 
     Future getAllUsers() async {
@@ -25,8 +25,7 @@ class LeaderBoardController  extends GetxController{
 
    @override
   void onInit() async {
-    // TODO: implement onInit
-    
     await getAllUsers();
+    super.onInit();
   }
 }

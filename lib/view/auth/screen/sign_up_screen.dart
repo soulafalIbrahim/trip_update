@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:trip/core/constant/color.dart';
 import 'package:trip/widget/custom_elevated_button.dart';
 import 'package:trip/widget/custom_text_form_filed.dart';
-import '../../../core/constant/routes.dart';
 import '../../../widget/custom_text.dart';
 import '../controller/auth_controller.dart';
 

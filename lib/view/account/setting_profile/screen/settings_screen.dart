@@ -32,7 +32,7 @@ class SettingsScreen extends StatelessWidget {
           child: SingleChildScrollView(
             child: Column(
               children: [
-        
+
                  AppHeader(title: "Account Settings".tr,optionsSettings:false),
                 const SizedBox(height: 20),
                  Stack(
@@ -73,7 +73,7 @@ class SettingsScreen extends StatelessWidget {
                     ),
                   ],
                 )),
-        
+
                 const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -99,7 +99,7 @@ class SettingsScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-        
+
                 const SizedBox(height: 20),
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: 20),
@@ -121,7 +121,7 @@ class SettingsScreen extends StatelessWidget {
                         icon: Icons.person,
                         title: "Name".tr,
                         value: accountController.userName.value,
-        
+
                       ),
                       const Divider(color: Colors.white24),
                       ProfileRow(
@@ -143,10 +143,10 @@ class SettingsScreen extends StatelessWidget {
                       ),
                     ],
                   ))
-        
+
                 ),
                 const SizedBox(height: 20,),
-        
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -178,7 +178,7 @@ class SettingsScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-        
+
               ],
             ),
           ),

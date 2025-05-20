@@ -85,6 +85,7 @@ class MyLocal extends Translations {
            'Arabic Language':'Arabic Language',
            'Type a Message...':'Type a Message...',
            'Scanner Mode':'Scanner Mode',
+          
         },
         'ar_AR': {
           'Welcome to The Special World': 'مرحباً بكم في العالم الخاص',
@@ -168,7 +169,7 @@ class MyLocal extends Translations {
           'English Language':'اللغة الإنكليزية',
           'Arabic Language':'اللغة العربية',
           'Type a Message...':'اكتب رسالة ...',
-          'Scanner Mode':'وضع المسح',
+           'Scanner Mode':'وضع المسح',
           
         }
       };

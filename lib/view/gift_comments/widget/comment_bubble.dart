@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:trip/core/constant/assets.dart';
 
 import '../../../core/constant/color.dart';
 
 class CommentBubble extends StatelessWidget {
-  final String name;
+  final String? name;
   final String text;
   final Function() deleteComment ;
  final String imagePath;
@@ -46,13 +47,13 @@ class CommentBubble extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF006DFF),
+                  color:  const Color(0xFFC7CACE).withValues(blue: 1 , red: 1 ,green: 1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(name,
+                    Text(name!,
                         style: TextStyle(
                             color: AppColor.dark,
                             fontWeight: FontWeight.bold,
@@ -60,7 +61,7 @@ class CommentBubble extends StatelessWidget {
                             ),
                             textAlign: TextAlign.start,),
                     const SizedBox(height: 4),
-                    Text(text, style: const TextStyle(color: Colors.white) , textAlign: TextAlign.end,),
+                    Text(text, style: const TextStyle(color:AppColor.appColor) , textAlign: TextAlign.end,),
                   ],
                 ),
               ),
@@ -70,9 +71,10 @@ class CommentBubble extends StatelessWidget {
           
           CircleAvatar(
            backgroundImage:imagePath != ''? NetworkImage(imagePath) : null,
-           child: imagePath == '' ? Image.asset('assets/icons/avatar.png'): null,
+           backgroundColor:imagePath != ''? AppColor.lightGrey : null,
            // null,
             radius: 20,
+           child: imagePath == '' ? Image.asset(Assets.logo): null,
           )
         ],
       ),

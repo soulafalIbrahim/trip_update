@@ -11,15 +11,10 @@ import 'package:trip/view/home/screen/home_screen.dart';
 import 'package:trip/view/leave_a_trace/screen/leave_a_trace_screen.dart';
 import 'package:trip/view/notification/screen/notification_screen.dart';
 import 'package:trip/view/splash/screen/splash_screen.dart';
-import 'package:trip/widget/custom_button_navbar_widget.dart';
 import 'core/constant/routes.dart';
 List<GetPage<dynamic>>? routes = [
 
-  GetPage(
-    name:AppRoutes.buttonNavBarScreen,
-    page: () =>  const CustomBottomNavigationWidget(),
 
-  ),
   GetPage(
     name:AppRoutes.splashScreen,
     page: () => const SplashScreen(),

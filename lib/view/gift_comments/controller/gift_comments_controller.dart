@@ -2,17 +2,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
+import 'package:trip/core/constant/color.dart';
 import 'package:trip/core/constant/const_data.dart';
+import 'package:trip/data/helpers/my_dialogs.dart';
+import 'package:trip/widget/custom_text.dart';
 
 import '../../notification/controller/notification_controller.dart';
 
 class GiftsCommentsController extends GetxController {
-  RxBool isloading = false.obs;
-  RxBool isclicked = false.obs;
+  RxBool isLoading = false.obs;
+  RxBool isClicked = false.obs;
   String fingerPrintUserId = '';
   var imageUrl = ''.obs;
-  RxString titleFinferPrint = ''.obs;
+  RxString titleFingerPrint = ''.obs;
   RxList<dynamic> likes = [].obs;
   CollectionReference fingerPrints =
       FirebaseFirestore.instance.collection('fingerprints');
@@ -20,70 +22,72 @@ class GiftsCommentsController extends GetxController {
   final FirebaseAuth auth = FirebaseAuth.instance;
   TextEditingController message = TextEditingController();
   String profileImages = ''; //users
- 
-
   var allCommectsForFingerPrint = [];
   RxList allLikesForFingerPrint = [].obs;
   List allusercomment = [];
+  String  userName = '' ;
+  RxString fingerPrintUserName = ''.obs;
+  RxString fingerPrintUserImage = ''.obs;
 
   void isClickedToggle() {
-    isclicked.value = !isclicked.value;
+    isClicked.value = !isClicked.value;
   }
 
-  Future getFinferPrint(String fingerPrintId) async {
+  Future getFingerPrint(String fingerPrintId) async {
     final fingerPrint = await fingerPrints.doc(fingerPrintId).get();
     if (fingerPrint.exists) {
       imageUrl.value = fingerPrint['image'];
 
-      titleFinferPrint.value = fingerPrint['title'];
+      titleFingerPrint.value = fingerPrint['title'];
       fingerPrintUserId = fingerPrint['userId'];
+      final userSnapshot = await allUsers.doc(fingerPrintUserId).get();
+      fingerPrintUserName.value = userSnapshot['username'] ?? '';
+      fingerPrintUserImage.value = userSnapshot['profileImage'] ?? '';
     }
 
-    print('....................Image....${imageUrl})}');
   }
 
   Future<void> addCommentToFingerPoint(
       String fingerPointId, String commentText) async {
     try {
       final userId = auth.currentUser!.uid;
-      final nameuser = auth.currentUser!.displayName;
+      final userSnapshot = await allUsers.doc(userId).get();
+      userName = userSnapshot['username'] ?? '';
+      //auth.currentUser!.displayName;
       final commentRef =
-          await fingerPrints.doc(fingerPointId).collection('comments').doc();
+          fingerPrints.doc(fingerPointId).collection('comments').doc();
 
-      final CommentId = commentRef.id;
+      final commentId = commentRef.id;
 
       await commentRef.set({
-        'commentId': CommentId,
+        'commentId': commentId,
         'userId': userId,
-        'username': nameuser ?? '',
+        'username': userName,
         'text': commentText,
         'timestamp': FieldValue.serverTimestamp(),
         'replay': [], // Add a timestamp for the comment
       });
       message.clear();
       await sendNotifiction(
-          userId, nameuser ?? '', ' $nameuser Comment on Your Post');
+          userId, userName , ' $userName Comment on Your Post');
     } catch (e) {
-      print('Error adding comment: $e');
+      throw ('Error adding comment: $e');
     }
   }
 
   Future<void> likesForFingerPrint(String fingerPrintId, String userId) async {
-    final docRef = fingerPrints.doc(fingerPrintId).get();
-    final postRef = fingerPrints.doc(fingerPrintId);
-    final nameuser = auth.currentUser!.displayName;
+    final docRef = fingerPrints.doc(fingerPrintId);
+    final userName = auth.currentUser!.displayName;
     try {
-        await postRef.update({
-          'likes': FieldValue.arrayUnion([userId]),
-        });
-        await  sendNotifiction(
-            userId, nameuser ?? 'Some one', ' $nameuser Liked Your Post');
-      
-        update();
-        print('add liked.........................');
-      
-    } catch (xerroe) {
-      print('fingerPrint liked error!');
+      await docRef.update({
+        'likes': FieldValue.arrayUnion([userId]),
+      });
+
+      await sendNotifiction(
+          userId, userName ?? 'Some one', ' $userName Liked Your Post');
+      update();
+    } catch (e) {
+      throw ('fingerPrint liked error!');
     }
   }
 
@@ -94,23 +98,20 @@ class GiftsCommentsController extends GetxController {
     await fingerPrintRef.update({
       'likes': FieldValue.arrayRemove([userId])
     });
-  
-    update();
-    print('liked Removed....................................');
   }
 
-  Future getAllCommectsandLikes() async {
-    isloading.value = true;
+  Future getAllCommentsAndLikes() async {
+    isLoading.value = true;
 
-    final docRef = await fingerPrints.doc(ConstData.fingerprintDocId);
+    final docRef = fingerPrints.doc(ConstData.fingerprintDocId);
 
-    await docRef.collection('comments').snapshots().listen((event) {
+    docRef.collection('comments').snapshots().listen((event) {
       final doc = event.docs;
       if (doc.isNotEmpty) {
         allCommectsForFingerPrint.assignAll(doc);
         update();
       } else {
-        Text('No Comment Now');
+        const Text('No Comment Now');
         update();
       }
     });
@@ -120,11 +121,10 @@ class GiftsCommentsController extends GetxController {
 
   Future<void> sendNotifiction(
       String userId, String nameuser, String action) async {
-
     await NotificationController().sendNotification(
         senderId: userId,
-        senderName: nameuser ?? '',
-        senderImage: profileImages ?? '',
+        senderName: nameuser,
+        senderImage: profileImages,
         receiverId: fingerPrintUserId,
         action: action);
   }
@@ -137,7 +137,6 @@ class GiftsCommentsController extends GetxController {
     for (var commentDoc in commentSnapshots.docs) {
       String userId = commentDoc['userId'];
       String commentId = commentDoc['commentId'];
-      String commentText = commentDoc['text'];
 
       final userSnapshot = await FirebaseFirestore.instance
           .collection('users')
@@ -146,7 +145,7 @@ class GiftsCommentsController extends GetxController {
 
       if (userSnapshot.exists) {
         profileImages = userSnapshot.data()?['profileImage'] ?? '';
-        //  String username = userSnapshot.data()?['username'] ?? '';
+        userName = userSnapshot.data()?['username'] ?? '';
 
         fingerPrints
             .doc(ConstData.fingerprintDocId)
@@ -161,55 +160,106 @@ class GiftsCommentsController extends GetxController {
   }
 
   Future deleteComment(String commentId) async {
-    await fingerPrints
-        .doc(ConstData.fingerprintDocId)
-        .collection('comments')
-        .doc(commentId)
-        .delete();
+    try {
+      await fingerPrints
+          .doc(ConstData.fingerprintDocId)
+          .collection('comments')
+          .doc(commentId)
+          .delete();
+
+      allCommectsForFingerPrint
+          .removeWhere((comment) => comment['commentId'] == commentId);
+    } catch (e) {
+      throw ('Error deleting comment: $e');
+    }
   }
 
   getallLike() async {
     fingerPrints.doc(ConstData.fingerprintDocId).snapshots().listen((event) {
       final doc = event;
       final like = doc['likes'];
-      likes.value =like;
+      likes.value = like;
       if (like.contains(auth.currentUser!.uid)) {
-        isclicked.value = true;
+        isClicked.value = true;
       }
       if (doc['likes'] != null) {
         for (String uid in like) {
           final userDoc = allUsers.doc(uid).get();
 
-          if (userDoc != null && !allLikesForFingerPrint.contains(userDoc)) {
-            allLikesForFingerPrint.value.add(userDoc);
-           // update();
+          if (!allLikesForFingerPrint.contains(userDoc)) {
+            allLikesForFingerPrint.add(userDoc);
           }
         }
       } else {
-        print('Some thing wrong');
+        throw ('Some thing wrong');
       }
     });
   }
+  void showReportDialog(BuildContext context, String postId) {
+    final TextEditingController messageController = TextEditingController();
 
-  // final messages = <Message>[
-  //   Message(
-  //       name: "Ahmad Mohammed",
-  //       text: "I want to thank you all for the beautiful gifts I received.",
-  //       image: "assets/images/user1.png"),
-  //   Message(
-  //       name: "Sara Falsol",
-  //       text: "You made me so happy.",
-  //       image: "assets/images/user2.png"),
-  //   Message(
-  //       name: "Mohammed Ahmed",
-  //       text: "I want to share with you all my joy with this special gift.",
-  //       image: "assets/images/user3.png"),
-  // ].obs;
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppColor.dark,
+        title:  const CustomText(text: 'Report Post' , color: AppColor.appColor, fontSize: 16, fontWeight: FontWeight.w500,),
+        content: TextField(
+          controller: messageController,
+          maxLines: 4,
+          style: TextStyle(color: AppColor.white),
+          decoration:  InputDecoration(
+            hintText: 'Enter your reason for reporting...',
+            hintStyle: TextStyle(color: AppColor.white),
+            border: const OutlineInputBorder(),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child:   const CustomText(text: 'Cancel' , color: AppColor.appColor, fontSize: 16, fontWeight: FontWeight.w500,),
+          ),
+          TextButton(
+            onPressed: () async {
+              final message = messageController.text.trim();
+              if (message.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: CustomText(text: 'Please enter a message',color: AppColor.appColor, fontSize: 16, fontWeight: FontWeight.w300,)),
+                );
+                return;
+              }
+
+              final userId = FirebaseAuth.instance.currentUser?.uid;
+
+              if (userId == null) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: CustomText(text: 'User not authenticated',color: AppColor.appColor, fontSize: 16, fontWeight: FontWeight.w300,)),
+                );
+                return;
+              }
+
+              await FirebaseFirestore.instance.collection('reports').add({
+                'postId': postId,
+                'userId': userId,
+                'message': message,
+                'timestamp': FieldValue.serverTimestamp(),
+              });
+
+             Get.back() ; // Close dialog
+
+              MyDialogs.success(msg: 'Report submitted. Thank you.') ;
+            },
+            child: const CustomText(text: 'Send' ,color: AppColor.appColor, fontSize: 16, fontWeight: FontWeight.w500,),
+          ),
+        ],
+      ),
+    );
+  }
+
 
   @override
   void onInit() {
-    getFinferPrint(ConstData.fingerprintDocId);
-    getAllCommectsandLikes();
+    getFingerPrint(ConstData.fingerprintDocId);
+    getAllCommentsAndLikes();
     getallLike();
     // TODO: implement onInit
     super.onInit();

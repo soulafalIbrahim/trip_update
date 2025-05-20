@@ -1,73 +1,50 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Post {
-  final int id;
-  final String username;
-  final String userImage;
+  final String id;
+  final String userId;
   final String postText;
-  final DateTime postDate;
   final String? postImage;
-  final int likesCount;
-  final int commentsCount;
-  final int sharesCount;
-  final bool isOwner;
-  final List<String> recentInteractors; // مصفوفة التفاعلات الأخيرة
-  final List<Comment> comments; // قائمة التعليقات
+  final double latitude;
+  final double longitude;
+
 
   Post({
     required this.id,
-    required this.username,
-    required this.userImage,
     required this.postText,
-    required this.postDate,
     this.postImage,
-    required this.likesCount,
-    required this.commentsCount,
-    required this.sharesCount,
-    required this.isOwner,
-    required this.recentInteractors, // التفاعلات
-    required this.comments, // التعليقات
+    required this.latitude,
+    required this.longitude,
+  required this.userId,
   });
 
-  // تحويل البيانات من Firestore إلى نموذج Post
   factory Post.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
     return Post(
       id: data['id'],
-      username: data['username'],
-      userImage: data['userImage'],
-      postText: data['postText'],
-      postDate: (data['postDate'] as Timestamp).toDate(),
+      userId:data['userId'] ,
+      postText: data['title'],
       postImage: data['postImage'],
-      likesCount: data['likesCount'],
-      commentsCount: data['commentsCount'],
-      sharesCount: data['sharesCount'],
-      isOwner: data['isOwner'],
-      recentInteractors: List<String>.from(data['recentInteractors'] ?? []),
-      comments: (data['comments'] as List)
-          .map((commentData) => Comment.fromMap(commentData))
-          .toList(),
+      latitude: data['latitude'] ?? 0.0,
+      longitude: data['longitude'] ?? 0.0,
+
     );
   }
 
-  // تحويل النموذج إلى بيانات لتخزينها في Firestore
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'username': username,
-      'userImage': userImage,
       'postText': postText,
-      'postDate': Timestamp.fromDate(postDate),
       'postImage': postImage,
-      'likesCount': likesCount,
-      'commentsCount': commentsCount,
-      'sharesCount': sharesCount,
-      'isOwner': isOwner,
-      'recentInteractors': recentInteractors,
-      'comments': comments.map((comment) => comment.toMap()).toList(),
+      'latitude': latitude,
+      'longitude': longitude,
+       'userId': userId ,
     };
   }
 }
+
+
+
 
 class Comment {
   final String username;

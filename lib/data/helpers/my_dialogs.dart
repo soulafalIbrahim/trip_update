@@ -4,13 +4,13 @@ import 'package:get/get.dart';
 class MyDialogs {
   static success({required String msg}) {
     Get.snackbar('Success', msg,
-        colorText: Colors.white, backgroundColor: Colors.green.withOpacity(.9));
+        colorText: Colors.white);
   }
 
   static error({required String msg}) {
     Get.snackbar('Error', msg,
         colorText: Colors.white,
-        backgroundColor: Colors.redAccent.withOpacity(.9));
+        backgroundColor: Colors.redAccent);
   }
 
   static info({required String msg}) {

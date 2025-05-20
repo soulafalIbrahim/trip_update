@@ -34,6 +34,7 @@ class CustomText extends StatelessWidget {
       text,
       textAlign: textAlign,
       overflow: textOverflow,
+    
       style: TextStyle(
         decoration: decoration,
         height: 1.3,
@@ -41,6 +42,7 @@ class CustomText extends StatelessWidget {
         fontWeight: fontWeight,
         fontFamily: fontFamily,
         color: color,
+        
       ),
     );
   }

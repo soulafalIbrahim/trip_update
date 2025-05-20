@@ -7,10 +7,11 @@ import '../setting_profile/controller/account_controller.dart';
 
 
 class AppHeader extends StatelessWidget {
-  const AppHeader(
-      {super.key, required this.title, required this.optionsSettings});
+   const AppHeader(
+      {super.key, required this.title, required this.optionsSettings });
   final String title;
   final bool optionsSettings;
+
 
   @override
   Widget build(BuildContext context) {
@@ -23,14 +24,16 @@ class AppHeader extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            !optionsSettings
-                ? InkWell(
-                    onTap: () {
-                      Get.back();
-                    },
-                    child: Icon(Icons.arrow_back_ios, color: AppColor.white),
-                  )
-                : Container(),
+
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: InkWell(
+                      onTap: () {
+                        Get.back();
+                      },
+                      child: Icon(Icons.arrow_back_ios, color: AppColor.white),
+                    ),
+                ),
             const Spacer(),
             CustomText(
               text: title,
@@ -38,9 +41,6 @@ class AppHeader extends StatelessWidget {
               color: AppColor.white,
             ),
             const Spacer(),
-            optionsSettings
-                ? Icon(Icons.more_vert, color: AppColor.white)
-                : Container(),
           ],
         ),
         const SizedBox(

@@ -50,21 +50,23 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAX-txkvWvANKmqb-Kic69M_MA5nrLlOCI',
+    apiKey: 'AIzaSyBu5jQZiQC0MdIt-lqvcGyolqJO7fc9mJY',
     appId: '1:649161144772:android:118c5184f1967ae2888c91',
     messagingSenderId: '649161144772',
     projectId: 'relic-707e7',
+
     storageBucket: 'relic-707e7.appspot.com',
+
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyD1KIwv8J9_77tv0oAtz0bncYl6EkKAZF0',
+    apiKey: 'AIzaSyBu5jQZiQC0MdIt-lqvcGyolqJO7fc9mJY',
     appId: '1:649161144772:ios:0c5b2e59ca2f4c32888c91',
     messagingSenderId: '649161144772',
     projectId: 'relic-707e7',
     storageBucket: 'relic-707e7.appspot.com',
     androidClientId: '649161144772-ujo8jl5jt25eg99l882g2u0ri0hb1dm5.apps.googleusercontent.com',
     iosClientId: '649161144772-6knsgf7feau9rhlvqp4n5pb6nk0n6bk1.apps.googleusercontent.com',
-    iosBundleId: 'com.hasanahmad.trip',
+    iosBundleId: 'com.hasanhasan.ahmadalgnanim.tagzone',
   );
 }

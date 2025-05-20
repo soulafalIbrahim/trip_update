@@ -54,12 +54,11 @@ class EditProfileController extends GetxController {
       }
         await user!.updatePhotoURL(imageUrl);
         accountcontroller.fetchUserData();
-      //   print('Update Photo Done............');
-      // }
-      await user!.reload();
+
+      await user.reload();
       isLoading = false;
-    } catch (xerroe) {
-      print('some thing wrong ${xerroe}');
+    } catch (e) {
+      throw('some thing wrong ${e}');
     }
   }
 

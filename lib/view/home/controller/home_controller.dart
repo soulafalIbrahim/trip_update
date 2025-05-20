@@ -1,33 +1,32 @@
-
-import 'dart:ui' as ui;
-
+import 'dart:convert';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'dart:convert';
+import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
+import 'package:latlong2/latlong.dart';
+import 'package:flutter_map/flutter_map.dart';
 import '../../../core/constant/assets.dart';
 import '../../../core/constant/const_data.dart';
-import '../../gift_comments/screen/gift_comments.dart';
+import 'dart:ui' as ui;
+import 'dart:typed_data';
+import 'dart:math' as Math;
 
 class HomeController extends GetxController {
   LatLng? _currentLocation;
-  LatLng? currentLocationt;
-  Set<Marker> _markers = {};
-  Set<Polyline> _polylines = {}; // ✅ لإضافة مسار
+  List<Marker> _markers = [];
+  List<Polyline> _polylines = [];
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   List<LatLng> polylineCoordinates = [];
   RxList<Map<String, dynamic>> arIconsData = <Map<String, dynamic>>[].obs;
-
+  final FirebaseAuth  userCredential = FirebaseAuth.instance;
   @override
   void onInit() {
-    _getCurrentLocation();
-    print('${currentLocation}');
-    loadARIconsData();
     super.onInit();
+    _getCurrentLocation();
+    loadARIconsData();
   }
 
   Future<void> loadARIconsData() async {
@@ -41,10 +40,9 @@ class HomeController extends GetxController {
       }).toList();
       arIconsData.value = data;
     } catch (e) {
-      throw ("Error loading AR icons data: $e");
+      print("Error loading AR icons data: $e");
     }
   }
-
   Future<void> _getCurrentLocation() async {
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
@@ -54,69 +52,95 @@ class HomeController extends GetxController {
     if (permission == LocationPermission.whileInUse ||
         permission == LocationPermission.always) {
       Position position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high);
+        desiredAccuracy: LocationAccuracy.high,
+      );
       _currentLocation = LatLng(position.latitude, position.longitude);
-      currentLocationt = _currentLocation;
       update();
-      loadMarkers();
+      await loadMarkers();
+    
     }
   }
-
   Future<void> loadMarkers() async {
     List<Marker> markers = [];
     try {
-      QuerySnapshot provincesSnapshot =
-          await _firestore.collection('fingerprints').get();
-      
-      final Uint8List markerIcon = await getBytesFromAsset(Assets.logo, 100);
-      for (var provinceDoc in provincesSnapshot.docs) {
-        // String provinceName = provinceDoc['name'];
-        double provinceLat = double.parse(provinceDoc['latitude'].toString());
-        double provinceLng = double.parse(provinceDoc['longitude'].toString());
+      QuerySnapshot fingerprintsSnapshot = await _firestore.collection('fingerprints').get();
+      for (var doc in fingerprintsSnapshot.docs) {
+        double lat = double.parse(doc['latitude'].toString());
+        double lng = double.parse(doc['longitude'].toString());
 
-        markers.add(Marker(
-          markerId: MarkerId(provinceDoc.id),
-          position: LatLng(provinceLat, provinceLng),
-          //  infoWindow: InfoWindow(title: '${provinceLng}'),
-          icon: BitmapDescriptor.fromBytes(markerIcon),
-          visible: false,
-          onTap: () {
-           
-          },
-        ));
-        // Load fingerprints
-        QuerySnapshot fingerprintsSnapshot =
-            await _firestore.collection('fingerprints').get();
-
-        for (var fingerprintDoc in fingerprintsSnapshot.docs) {
-          //String colorHex = fingerprintDoc['color'];
-          double lat = double.parse(fingerprintDoc['latitude'].toString());
-          double lng = double.parse(fingerprintDoc['longitude'].toString());
-          // another location
-          markers.add(Marker(
-            markerId: MarkerId(fingerprintDoc.id),
-            position: LatLng(lat, lng),
-            //  infoWindow: InfoWindow(title: 'Fingerprint ${fingerprintDoc.id}'),
-            icon: BitmapDescriptor.fromBytes(markerIcon),
-            onTap: () {
-              ConstData.fingerprintDocId = fingerprintDoc.id;
-           //   getRoutePoints(LatLng(lat, lng));
-            //  drawRoute();
-        
-              //LatLng(lat, lng)// ✅ عند الضغط على البصمة نرسم المسار
-            },
-          ));
-        }
+        markers.add(
+          Marker(
+            point: LatLng(lat, lng),
+            width: 60,
+            height: 60,
+            child: GestureDetector(
+              onTap: () async {
+                ConstData.fingerprintDocId = doc.id;
+                await getRoutePoints(LatLng(lat, lng));
+              },
+              child: Image.asset(Assets.logo),
+            ),
+          ),
+        );
       }
-
-      _markers = markers.toSet();
+      _markers = markers;
       update();
     } catch (e) {
-      throw ("Error loading data: $e");
+      print("Error loading markers: $e");
     }
   }
+  Future<void> getRoutePoints(LatLng destination) async {
+    try {
+      const String apiKey = '5b3ce3597851110001cf6248fc608d865d2842dc82658c7a1064ec0a';
 
-  // ss
+      final url = Uri.parse('https://api.openrouteservice.org/v2/directions/driving-car/geojson');
+
+      final body = jsonEncode({
+        "coordinates": [
+          [_currentLocation!.longitude, _currentLocation!.latitude],
+          [destination.longitude, destination.latitude]
+        ]
+      });
+
+      final response = await http.post(
+        url,
+        headers: {
+          'Authorization': apiKey,
+          'Content-Type': 'application/json',
+        },
+        body: body,
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        final List coordinates = data['features'][0]['geometry']['coordinates'];
+
+        polylineCoordinates = coordinates
+            .map<LatLng>((point) => LatLng(point[1], point[0]))
+            .toList();
+
+        drawRoute();
+        /// AR Code
+        ///    drawArrowsOnRoute();
+      } else {
+        print('Failed to load directions: ${response.body}');
+      }
+    } catch (e) {
+      print('Error getting route points: $e');
+    }
+  }
+  void drawRoute() {
+    if (_currentLocation == null || polylineCoordinates.isEmpty) return;
+
+    final polyline = Polyline(
+      points: polylineCoordinates,
+      color: const Color(0xFF42A5F5),
+      strokeWidth: 4.0,
+    );
+
+    _polylines = [polyline];
+    update();
+  }
   Future<Uint8List> getBytesFromAsset(String path, int width) async {
     ByteData data = await rootBundle.load(path);
     ui.Codec codec = await ui.instantiateImageCodec(
@@ -127,42 +151,26 @@ class HomeController extends GetxController {
     final byteData = await fi.image.toByteData(format: ui.ImageByteFormat.png);
     return byteData!.buffer.asUint8List();
   }
+  double getBearing(LatLng start, LatLng end) {
+    final lat1 = start.latitude * (3.141592653589793 / 180.0);
+    final lon1 = start.longitude * (3.141592653589793 / 180.0);
+    final lat2 = end.latitude * (3.141592653589793 / 180.0);
+    final lon2 = end.longitude * (3.141592653589793 / 180.0);
 
-Future<void> getRoutePoints(LatLng destination) async {
-  PolylinePoints polylinePoints = PolylinePoints();
-  PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-    googleApiKey: 'AIzaSyARTBQax2dBWtXzMvsQpKRabo4wElGuY5Y',
-    request: PolylineRequest(origin: PointLatLng(currentLocation!.latitude, currentLocation!.longitude), 
-    destination: PointLatLng(destination.latitude, destination.longitude),
-    mode: TravelMode.driving,),
-    
-  );
+    final dLon = lon2 - lon1;
 
-  if (result.points.isNotEmpty) {
-    polylineCoordinates = result.points
-        .map((e) => LatLng(e.latitude, e.longitude))
-        .toList();
+    final y = Math.sin(dLon) * Math.cos(lat2);
+    final x = Math.cos(lat1) * Math.sin(lat2) -
+        Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon);
+
+    double brng = Math.atan2(y, x);
+    brng = brng * (180.0 / 3.141592653589793);
+    return (brng + 360) % 360;
   }
-}
+ 
 
-  
 
-  void drawRoute() {
-    if (_currentLocation == null) return;
-
-    final Polyline polyline = Polyline(
-      polylineId: PolylineId('route'),
-      color: const Color(0xFF42A5F5), // لون المسار أزرق
-      width: 5,
-      points: polylineCoordinates,
-    );
-
-    _polylines = {polyline};
-    update();
-  }
-
-//AIzaSyARTBQax2dBWtXzMvsQpKRabo4wElGuY5Y
-  Set<Marker> get markers => _markers;
+  List<Marker> get markers => _markers;
   LatLng? get currentLocation => _currentLocation;
-  Set<Polyline> get polylines => _polylines; // ✅ getter للمسارات
+  List<Polyline> get polylines => _polylines;
 }

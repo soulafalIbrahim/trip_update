@@ -36,7 +36,7 @@ class LeaderBoardScreen extends StatelessWidget {
                 crossAxisAlignment:CrossAxisAlignment.center,
                 children: [
                   AppHeader(title: 'Leader Board'.tr,optionsSettings:false),
-                  const SizedBox(height: 25),
+                  const SizedBox(height: 1),
                   controller.isloading == true ? const Center(child: CircularProgressIndicator(),) : 
                   Expanded(
                     child:ListView.separated(

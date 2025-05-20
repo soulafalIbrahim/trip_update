@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -17,8 +18,11 @@ class NotificationController extends GetxController {
   }
 
   void _listenToNotifications() {
+    final currentUserId = FirebaseAuth.instance.currentUser?.uid;
+    
     _firestore
         .collection('notifications')
+       
         .orderBy('timestamp', descending: true)
         .snapshots()
         .listen((querySnapshot) async {
@@ -26,7 +30,13 @@ class NotificationController extends GetxController {
 
       for (var doc in querySnapshot.docs) {
         final notification = NotificationModel.fromDoc(doc);
-        temp.add(notification);
+        if (notification.receiverId == currentUserId) {
+            temp.add(notification);
+        }
+        else{
+          continue;
+        }
+       
       }
 
       if (temp.length > notifications.length) {
@@ -57,6 +67,7 @@ class NotificationController extends GetxController {
       'timestamp': Timestamp.now(),
     });
   }
+
   String formatTime(Timestamp timestamp) {
     final date = timestamp.toDate();
     final now = DateTime.now();
@@ -74,7 +85,7 @@ class NotificationController extends GetxController {
     try {
       await _firestore.collection('notifications').doc(notificationId).delete();
     } catch (e) {
-      throw("Error deleting notification: $e");
+      throw ("Error deleting notification: $e");
     }
   }
 

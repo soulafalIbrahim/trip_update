@@ -22,14 +22,10 @@ Row leaderBoarditem(LeaderBoardController controller, int index) {
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
                           fontSize: 18,),),
-                          Text(controller.allUaser[index]['email'] , style:const TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 10,),),
                            Text(' fingerPoint :${controller.allUaser[index]['fingerPoint']}' , style:const TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
-                          fontSize: 8.5,),),
+                          fontSize: 10,),),
                           
                           ]
                         ),
