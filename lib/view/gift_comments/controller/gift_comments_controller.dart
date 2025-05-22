@@ -13,7 +13,7 @@ class GiftsCommentsController extends GetxController {
   RxBool isLoading = false.obs;
   RxBool isClicked = false.obs;
   String fingerPrintUserId = '';
-  var imageUrl = ''.obs;
+  RxString imageUrl = ''.obs;
   RxString titleFingerPrint = ''.obs;
   RxList<dynamic> likes = [].obs;
   CollectionReference fingerPrints =
@@ -37,7 +37,7 @@ class GiftsCommentsController extends GetxController {
     final fingerPrint = await fingerPrints.doc(fingerPrintId).get();
     if (fingerPrint.exists) {
       imageUrl.value = fingerPrint['image'];
-
+      print('ccccccccccccccccccc${imageUrl}');
       titleFingerPrint.value = fingerPrint['title'];
       fingerPrintUserId = fingerPrint['userId'];
       final userSnapshot = await allUsers.doc(fingerPrintUserId).get();
@@ -257,8 +257,8 @@ class GiftsCommentsController extends GetxController {
 
 
   @override
-  void onInit() {
-    getFingerPrint(ConstData.fingerprintDocId);
+  void onInit() async {
+   await getFingerPrint(ConstData.fingerprintDocId);
     getAllCommentsAndLikes();
     getallLike();
     // TODO: implement onInit

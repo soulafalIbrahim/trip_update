@@ -2,17 +2,22 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:trip/core/constant/color.dart';
+import '../../../core/helper_function/show_dialog.dart';
 import '../../../data/helpers/my_dialogs.dart';
 import '../../account/setting_profile/controller/account_controller.dart';
+import '../../ar_map/screen/ar_take_photo_screen.dart';
 import '../../home/controller/home_controller.dart';
 import '../../notification/controller/notification_controller.dart';
 
 class LeaveTraceController extends GetxController {
+  bool comeFromTextButton = false;
   final ImagePicker _picker = ImagePicker();
   LatLng? currentLocation;
   String receiverId = ' ';
@@ -28,7 +33,7 @@ class LeaveTraceController extends GetxController {
   CollectionReference users = FirebaseFirestore.instance.collection('users');
   CollectionReference fingerPrints =
       FirebaseFirestore.instance.collection('fingerprints');
- 
+
   final FirebaseStorage storage = FirebaseStorage.instance;
   final AccountController accountController = Get.find();
   final HomeController homeController =
@@ -37,8 +42,6 @@ class LeaveTraceController extends GetxController {
   RxString fingerPointId = ''.obs;
   var oldFingerPoint;
   RxBool isloading = false.obs;
-
-
 
   Future<void> saveImageToTagZoneFolder(File imageFile) async {
     try {
@@ -55,20 +58,16 @@ class LeaveTraceController extends GetxController {
         await tagZoneDir.create(recursive: true);
       }
 
-      final String newPath = "${tagZoneDir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg";
+      final String newPath =
+          "${tagZoneDir.path}/${DateTime.now().millisecondsSinceEpoch}.jpg";
       final File newImage = await imageFile.copy(newPath);
 
-
-        MyDialogs.success(msg: 'Saved to ${newImage.path}');
-        Get.back();
-
-    }
-
-    catch (e) {
+      MyDialogs.success(msg: 'Saved to ${newImage.path}');
+      Get.back();
+    } catch (e) {
       MyDialogs.error(msg: 'Cannot Save Photo: $e');
     }
   }
-
 
   getAllUserLocation() async {
     try {
@@ -78,7 +77,9 @@ class LeaveTraceController extends GetxController {
 
       for (var provinceDoc in provincesSnapshot.docs) {
         // String provinceName = provinceDoc['name'];
+
         double provinceLat = double.parse(provinceDoc['latitude'].toString());
+
         double provinceLng = double.parse(provinceDoc['longitude'].toString());
         double distanceInMeters = Geolocator.distanceBetween(
           currentLocation!.latitude,
@@ -88,14 +89,14 @@ class LeaveTraceController extends GetxController {
         );
 
         if (distanceInMeters <= 3) {
-               receiverId = provinceDoc['userId'];
-
+          receiverId = provinceDoc['userId'];
+          print(receiverId);
           await sendNotifiction(user!.uid, user!.displayName ?? 'Some One',
               receiverId, '$username add a finger print');
         }
       }
     } catch (e) {
-      throw('Some thing wrong $e');
+      throw ('Some thing wrong $e');
     }
   }
 
@@ -117,14 +118,14 @@ class LeaveTraceController extends GetxController {
     isloading.value = true;
     Position position = await getCurrentLocation();
     try {
-      
       String? imageUrl;
       currentLocation = LatLng(position.latitude, position.longitude);
       if (user != null) {
         final newRef = fingerPrints.doc();
         final fingerPrintId = newRef.id;
         if (selectedImage.value != null) {
-          final ref = storage.ref().child('fingerPoint_images/$fingerPrintId.jpg');
+          final ref =
+              storage.ref().child('fingerPoint_images/$fingerPrintId.jpg');
           await ref.putFile(selectedImage.value!);
           imageUrl = await ref.getDownloadURL();
         }
@@ -141,13 +142,38 @@ class LeaveTraceController extends GetxController {
         increaceFingerPrint();
         await getAllUserLocation();
         placeTrace();
-        getAllUserLocation();
- Get.find<HomeController>();
+
+        Get.find<HomeController>();
         isloading.value = false;
-       
+        await checkFingerPrintImage(imageUrl, fingerPrintId);
+        Future.delayed(const Duration(seconds:2 ), () {
+       Get.offAll(() => ArTakePhotoScreen()); // Or use Get.off() or Get.offAll() as needed
+  });
       }
+      
     } catch (e) {
-      throw('Some thing is error $e');
+      isloading.value = false;
+     await showAddFinferPrintErrorDialog();
+    
+    }
+  }
+
+  Future checkFingerPrintImage(String? imageUrl, String fingerPrintId) async {
+    final doc = await fingerPrints.doc(fingerPrintId).get();
+    if (comeFromTextButton == false) {
+      if (doc.exists) {
+        final imageFigerPrint = doc['image'];
+        if (imageUrl != '' && imageFigerPrint != '' ||
+            imageFigerPrint != null) {
+          Get.snackbar('', 'Fingerprint  photo added successfully');
+        } else {
+          Get.snackbar('', 'The photo not added ');
+        }
+      }
+        
+    } else {
+       Get.snackbar('', 'FingerPrint added Successfully');
+       
     }
   }
 

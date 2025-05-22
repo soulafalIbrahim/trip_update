@@ -8,10 +8,12 @@ import 'package:flutter_compass/flutter_compass.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:torch_light/torch_light.dart';
 import 'package:trip/data/helpers/my_dialogs.dart';
 import '../../../data/models/posts/posts.dart';
 import '../../gifts/gift_controller/gift_controller.dart';
 import '../../leave_a_trace/screen/ImagePreviewScreen.dart';
+
 
 class ArMapController extends GetxController   {
   late CameraController cameraController;
@@ -21,7 +23,7 @@ class ArMapController extends GetxController   {
   var isCameraInitialized = false.obs;
   RxBool isLoading = false.obs;
   Rx<File?> capturedImage = Rx<File?>(null);
-
+  RxBool isRearFlashOn = true.obs;
 
 
   RxList<Post> nearbyPosts = <Post>[].obs;
@@ -43,7 +45,9 @@ class ArMapController extends GetxController   {
     getCurrentLocation();
   }
 
-
+ 
+  
+  
 
   Future<void> _initCamera() async {
     try {
@@ -208,6 +212,21 @@ class ArMapController extends GetxController   {
     }
   }
 
+
+void toggleFlash() async {
+    if (cameraController == null || !cameraController!.value.isInitialized) return;
+
+    try {
+      if (isRearFlashOn.value == false) {
+        await cameraController!.setFlashMode(FlashMode.off);
+      } else {
+        await cameraController!.setFlashMode(FlashMode.torch); // or .auto
+      }
+    } catch (e) {
+      debugPrint('Error toggling flash: $e');
+    }
+  }
+ 
   @override
   void onClose() {
     cameraController.dispose();

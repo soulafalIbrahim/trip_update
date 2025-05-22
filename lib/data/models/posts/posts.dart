@@ -24,7 +24,7 @@ class Post {
       id: data['id'],
       userId:data['userId'] ,
       postText: data['title'],
-      postImage: data['postImage'],
+      postImage: data['image'],
       latitude: data['latitude'] ?? 0.0,
       longitude: data['longitude'] ?? 0.0,
 

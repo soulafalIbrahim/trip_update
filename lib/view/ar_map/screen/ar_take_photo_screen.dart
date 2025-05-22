@@ -14,6 +14,8 @@ import '../../../core/constant/routes.dart';
 import '../../../widget/circle_button_widget.dart';
 import '../../account/setting_profile/screen/profile_screen.dart';
 import '../../gift_shopping_list/screen/gift_shopping_list_screen.dart';
+import '../../leave_a_trace/controller/leave_a_trace_controller.dart';
+import '../../leave_a_trace/screen/leave_a_trace_screen.dart';
 import '../controller/ar_map_controller.dart';
 
 class ArTakePhotoScreen extends StatelessWidget {
@@ -61,6 +63,8 @@ class ArTakePhotoScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 10),
+           
+            
           ],
         ),
         body: Obx(() {
@@ -144,11 +148,44 @@ class ArTakePhotoScreen extends StatelessWidget {
                   ),
                 ),
               ),
+           
               Positioned(
                 right: 16,
                 bottom: 30,
                 child: Column(
                   children: [
+                     GestureDetector(
+                       onTap:(){
+                       
+                        controller.isRearFlashOn.value = !controller.isRearFlashOn.value;
+                       controller.toggleFlash();
+                      },
+                      child:  CircleButtonWidget(
+                          icon:    controller.isRearFlashOn.value ?
+                          Icons.flash_on_sharp
+                          : Icons.flash_off, height: 40, width: 40),
+                    ),
+                     const SizedBox(height: 10),
+                          GestureDetector(
+              onTap: () => Get.toNamed(AppRoutes.leaveTraceScreen),
+              child: const CircleButtonWidget(
+                icon: Icons.add,
+                height: 40,
+                width: 40,
+              ),
+            ),
+             const SizedBox(height: 10),
+                      GestureDetector(
+                      onTap:(){
+                        final LeaveTraceController  leaveTraceController= Get.put(LeaveTraceController());
+                        leaveTraceController.comeFromTextButton = true ;
+                        Get.to(()=> LeaveTraceScreen());
+
+                      },
+                      child: const CircleButtonWidget(
+                          icon: BoxIcons.bx_text, height: 40, width: 40),
+                    ),
+                     const SizedBox(height: 10),
                     GestureDetector(
                       onTap: controller.fetchNearbyGfts,
                       child: const CircleButtonWidget(
